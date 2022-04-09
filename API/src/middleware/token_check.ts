@@ -12,7 +12,7 @@ export const tokenCheck = (req: any, res: any, next: any) => {
 
 export const isAdmin = (req: any, res: any, next: any) => {
   try {
-    if (req.userSession == "admin") {
+    if (req.userSession.type == "admin") {
       next();
     } else {
       throw "Yetkiniz yok!";

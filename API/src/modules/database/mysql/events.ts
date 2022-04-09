@@ -17,117 +17,141 @@ export class MySQL implements IDB {
     return dbQuery("INSERT INTO personals (username, pwd, phone) VALUES (?, ?, ?)", [username, pwd, phone]);
   }
 
-  personalUpdate(id: Number, username: String, pwd: String, phone: String) {
-    if (pwd) {
-      return dbQuery("UPDATE personals SET username=?, pwd=?, phone=? WHERE (personal_id=?)", [username, pwd, phone, id]);
-    } else {
-      return dbQuery("UPDATE personals SET username=?, phone=? WHERE (personal_id=?)", [username, phone, id]);
-    }
+  personalUpdate(personalID: Number, pwd: String) {
+    return dbQuery("UPDATE personals SET pwd=? WHERE (personal_id=?)", [pwd, personalID]);
   }
 
-  personalDelete(id: Number) {
-    return dbQuery("DELETE FROM personals WHERE (personal_id = ?)", [id]);
+  personalDelete(personalID: Number) {
+    return dbQuery("DELETE FROM personals WHERE (personal_id = ?)", [personalID]);
   }
 
   //* APARTS
 
   apartList() {
-    return dbQuery("SELECT * FROM aparts");
+    return dbQuery(
+      "SELECT aparts.apart_id AS apartID, aparts.apart_name AS apartName, aparts.apart_type AS apartType, aparts.apart_room_count AS apartRoomCount, customers.customer_id AS customerID, customers.customer_name AS customerName, customers.customer_phone AS customerPhone, customers.identity_number AS identityNumber, customers.contract_date AS contractDate, customers.monthly_contract_length AS contractLength FROM aparts LEFT JOIN customers ON aparts.apart_id = customers.apart_id AND customers.status = 1 ORDER BY aparts.apart_name ASC"
+    );
   }
 
-  apartShow(id: Number) {
-    return dbQuery("SELECT * FROM aparts WHERE apart_id=?", [id]);
+  apartShow(apartID: Number) {
+    return dbQuery(
+      "SELECT aparts.apart_id AS apartID, aparts.apart_name AS apartName, aparts.apart_type AS apartType, aparts.apart_room_count AS apartRoomCount, customers.customer_id AS customerID, customers.customer_name AS customerName, customers.customer_phone AS customerPhone, customers.identity_number AS identityNumber, customers.contract_date AS contractDate, customers.monthly_contract_length AS contractLength FROM aparts LEFT JOIN customers ON aparts.apart_id = customers.apart_id AND customers.status =1 WHERE aparts.apart_id=?",
+      [apartID]
+    );
   }
 
-  apartCreate(name: String, apartRoomCount: Number) {
-    return dbQuery("INSERT INTO aparts (apart_name, apart_room_count) VALUES (?, ?)", [name, apartRoomCount]);
+  apartCreate(apartName: String, apartType: Boolean, apartRoomCount: Number) {
+    return dbQuery("INSERT INTO aparts (apart_name, apart_type, apart_room_count) VALUES (?, ?, ?)", [apartName, apartType, apartRoomCount]);
   }
 
-  apartUpdate(id: Number, name: String, apartRoomCount: Number) {
-    return dbQuery("UPDATE aparts SET apart_name=?, apart_room_count=? WHERE (apart_id=?)", [name, apartRoomCount, id]);
+  apartUpdate(apartID: Number, apartName: String, apartType: Boolean, apartRoomCount: Number) {
+    return dbQuery("UPDATE aparts SET apart_name=?, apart_type=?, apart_room_count=? WHERE (apart_id=?)", [
+      apartName,
+      apartType,
+      apartRoomCount,
+      apartID,
+    ]);
   }
-  apartDelete(id: Number) {
-    return dbQuery("DELETE FROM aparts WHERE (apart_id=?)", [id]);
+
+  apartDelete(apartID: Number) {
+    return dbQuery("DELETE FROM aparts WHERE (apart_id=?)", [apartID]);
   }
 
   //* ITEMS
 
-  itemList() {
-    return dbQuery("SELECT * FROM apart_items");
+  itemListOfApart(apartID: Number) {
+    return dbQuery("SELECT item_id AS itemID, item_name AS itemName, item_given_date AS itemGivenDate FROM apart_items WHERE apart_id=?", [apartID]);
   }
 
-  itemShowOfApart(id: Number) {
-    return dbQuery("SELECT * FROM apart_items WHERE apart_id=?", [id]);
+  itemCreate(apartID: Number, itemName: String, itemGivenDate: Date) {
+    return dbQuery("INSERT INTO apart_items (item_name, item_given_date, apart_id) VALUES (?, ?, ?)", [itemName, itemGivenDate, apartID]);
   }
 
-  itemCreate(name: String, apartID: Number) {
-    return dbQuery("INSERT INTO apart_items (item_name, apart_id) VALUES (?, ?)", [name, apartID]);
-  }
-
-  itemUpdate(id: Number, name: String) {
-    return dbQuery("UPDATE apart_items SET item_name=? WHERE (item_id=?)", [name, id]);
-  }
-  itemDelete(id: Number) {
-    return dbQuery("DELETE FROM apart_items WHERE (item_id=?)", [id]);
+  itemDelete(itemID: Number) {
+    return dbQuery("DELETE FROM apart_items WHERE (item_id=?)", [itemID]);
   }
 
   //* CUSTOMERS
 
-  customerList() {
-    return dbQuery("SELECT * FROM customers");
-  }
-
-  customerShow(id: String) {
-    return dbQuery("SELECT * FROM customers WHERE customer_id=?", [id]);
-  }
-
-  customerCreate(name: String, phone: String, idNumber: Number, conntractDate: Date, contractLength: Number, apartID: Number, cost: Number) {
-    /*//
-    //! BURASI ÖZELLİKLE KONTROL EDİLMELİ
-    */
-
-    var invoiceList: any[];
-
-    return db.beginTransaction((error) => {
-      if (error) {
-        throw error;
-      }
-
-      db.query(
-        "INSERT INTO customers (customer_name, customer_phone, identity_number, contract_date, monthly_contract_length, apart_id) VALUES (?, ?, ?, ?)",
-        [name, phone, idNumber, conntractDate, contractLength, apartID],
-        (error, customerResult, customerFields) => {
-          if (error) {
-            return db.rollback(function () {
-              throw error;
-            });
-          }
-
-          for (let i = 0; i < contractLength; i++) {
-            invoiceList.push([moment(conntractDate, "YYYY-MM-DD").add(i, "M").format("YYYY-MM-DD"), cost, customerResult.insertId]);
-          }
-
-          db.query("INSERT INTO invoices (invoice_date, cost, customer_id) VALUES ?", [invoiceList], (error, invoiceResult, invoiceFields) => {
-            if (error) {
-              return db.rollback(function () {
-                throw error;
+  customerCreate(
+    customerName: String,
+    customerPhone: String,
+    identityNumber: Number,
+    contractDate: Date,
+    contractLength: Number,
+    apartID: Number,
+    cost: Number
+  ) {
+    return db.beginTransaction((err1) => {
+      if (err1) {
+        return db.rollback(() => {
+          throw err1;
+        });
+      } else {
+        return db.query(
+          "INSERT INTO customers (customer_name, customer_phone, identity_number, contract_date, monthly_contract_length, apart_id) VALUES (?, ?, ?, ?, ?, ?)",
+          [customerName, customerPhone, identityNumber, contractDate, contractLength, apartID],
+          (err2, customerResult, fields) => {
+            if (err2) {
+              return db.rollback(() => {
+                throw err2;
               });
             } else {
-              console.log("createUser complated.");
-              return true;
+              var invoiceList = [];
+
+              for (let i = 0; i < contractLength; i++) {
+                invoiceList.push([moment(contractDate, "YYYY-MM-DD").add(i, "M").format("YYYY-MM-DD"), cost, 0, customerResult.insertId]);
+              }
+
+              return db.query(
+                "INSERT INTO invoices (invoice_date, cost, status, customer_id) VALUES ?",
+                [invoiceList],
+                (err3, invoiceResult, fields) => {
+                  if (err3) {
+                    return db.rollback(() => {
+                      throw err3;
+                    });
+                  } else {
+                    return db.commit((err4) => {
+                      if (err4) {
+                        return db.rollback(() => {
+                          throw err4;
+                        });
+                      } else {
+                        return "ok";
+                      }
+                    });
+                  }
+                }
+              );
             }
-          });
-        }
-      );
+          }
+        );
+      }
     });
   }
 
-  customerUpdate(id: Number, name: String, phone: String, idNumber: Number) {
-    return dbQuery("UPDATE customers SET customer_name=?, customer_phone=?, identity_number=? WHERE (customer_id=?)", [name, phone, idNumber, id]);
+  customerUpdate(customerID: Number, identityNumber: String, customerName: String, customerPhone: String) {
+    return dbQuery("UPDATE customers SET customer_name=?, customer_phone=?, identity_number=? WHERE (customer_id=?)", [
+      customerName,
+      customerPhone,
+      identityNumber,
+      customerID,
+    ]);
   }
 
-  customerDelete(id: Number) {
-    return dbQuery("UPDATE customers SET status=false WHERE (customer_id=?)", [id]);
+  customerList() {
+    return dbQuery(
+      "SELECT customer_id AS customerID, customer_name AS customerName, customer_phone AS customerPhone, identity_number AS identityNumber, contract_date AS contractDate, monthly_contract_length AS contractLength, status, apart_id AS apartID FROM customers"
+    );
+  }
+
+  customerShow(customerID: Number) {
+    return dbQuery("SELECT * FROM customers WHERE customer_id=?", [customerID]);
+  }
+
+  customerEndContract(customerID: Number) {
+    return dbQuery("UPDATE customers SET status=false WHERE (customer_id=?)", [customerID]);
   }
 
   //* INVOICES
@@ -136,16 +160,12 @@ export class MySQL implements IDB {
     return dbQuery("SELECT * FROM invoices");
   }
 
-  invoiceofCustomer(id: Number) {
-    return dbQuery("SELECT * FROM invoices WHERE customer_id=?", [id]);
+  invoiceListOfCustomer(customerID: Number) {
+    return dbQuery("SELECT * FROM invoices WHERE customer_id=?", [customerID]);
   }
 
-  invoiceCreate(date: Date, cost: Number, customerID: Number) {
-    return dbQuery("INSERT INTO invoices (invoice_date, cost, customer_id) VALUES ?", [date, cost, customerID]);
-  }
-
-  invoicePay(id: Number) {
-    return dbQuery("UPDATE invoices SET status=1 WHERE invoice_id=?", [id]);
+  invoicePay(invoiceID: Number) {
+    return dbQuery("UPDATE invoices SET status=1 WHERE invoice_id=?", [invoiceID]);
   }
 
   invoiceDelete(id: Number) {

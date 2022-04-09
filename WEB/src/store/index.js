@@ -6,10 +6,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     breadcrumbs: [],
+    aa: "asdasd",
   },
   mutations: {
     setState(state, payload) {
-      console.log({ state, payload });
       state[payload.key] = payload.data;
     },
   },

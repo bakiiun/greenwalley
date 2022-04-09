@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Layout from "../views/personal-pages/Layout.vue";
-import Login from "../views/Login.vue";
+import Layout from "../views/admin-panel/Layout.vue";
+import Login from "../views/login/index.vue";
 
 Vue.use(VueRouter);
 
@@ -9,31 +9,33 @@ const routes = [
   {
     path: "/",
     name: "Layout",
+    redirect: "/dashboard",
     component: Layout,
     children: [
       {
         path: "/dashboard",
-        component: () => import("../views/personal-pages/child-pages/dashboard-page/Dashboard.vue"),
+        component: () => import("../views/admin-panel/child-pages/dashboard-page"),
       },
       {
         path: "/aparts",
-        component: () => import("../views/personal-pages/child-pages/aparts-page/Apart-List.vue"),
+        component: () => import("../views/admin-panel/child-pages/aparts-page"),
       },
       {
         path: "/aparts/show/:id",
-        component: () => import("../views/personal-pages/child-pages/aparts-page/child-pages/Show-Apart.vue"),
+        name: "showApart",
+        component: () => import("../views/admin-panel/child-pages/aparts-page/show-apart-page"),
       },
       {
         path: "/customers",
-        component: () => import("../views/personal-pages/child-pages/customers-page/Customer-List.vue"),
+        component: () => import("../views/admin-panel/child-pages/customers-page"),
       },
       {
         path: "/customers/:id",
-        component: () => import("../views/personal-pages/child-pages/customers-page/child-pages/Show-Customer.vue"),
+        component: () => import("../views/admin-panel/child-pages/customers-page/show-customer-page"),
       },
       {
         path: "/invoices",
-        component: () => import("../views/personal-pages/child-pages/invoices-page/Invoice-List.vue"),
+        component: () => import("../views/admin-panel/child-pages/invoices-page"),
       },
     ],
   },
@@ -42,24 +44,12 @@ const routes = [
     name: "Login",
     component: Login,
   },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  next();
 });
 
 export default router;

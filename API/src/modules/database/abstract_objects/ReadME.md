@@ -5,7 +5,3 @@ Kalıtımın ilk oluşturulan dosyası. Methodların yapısını taslak halinde 
 # 2. methods.ts
 
 İstekleri oluşturulan event'lere yönlendirir.
-
-# 3. events.ts
-
-İstekleri seçilen class'a yönlendirir.
