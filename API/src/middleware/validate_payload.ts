@@ -1,4 +1,3 @@
-import { validate } from "../modules/joi/module";
 import clientDTO from "../modules/dto/client_dto";
 import Joi from "joi";
 
@@ -19,16 +18,7 @@ export function verify(rules: {}) {
       });
       next();
     } catch (error) {
-      res.status(500).json({ message: "İstenilen alanları uygun şekilde doldurunuz." });
+      res.status(400).json({ message: "İstenilen alanları uygun şekilde doldurunuz." });
     }
   };
 }
-
-/* rules: Object
-like: 
- {
-   id: Joi.string().min(4).max(20).required(),
-   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).min(4).max(25).required(),
- }
-
-*/

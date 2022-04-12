@@ -11,7 +11,7 @@ const pwd = {
 
 const apart = {
   apartName: Joi.string().min(4).max(20).required(),
-  apartType: Joi.boolean().default(1),
+  apartType: Joi.boolean().default(1).truthy("1").falsy("0"),
   apartRoomCount: Joi.number().required(),
 };
 
