@@ -5,24 +5,20 @@ import moment from "moment";
 export class MySQL implements IDB {
   //* PERSONALS
 
-  personalList() {
-    return dbQuery("SELECT * FROM personals");
-  }
-
   personalShow(username: String) {
     return dbQuery("SELECT * FROM personals WHERE username=?", [username]);
-  }
-
-  personalCreate(username: String, pwd: String, phone: String) {
-    return dbQuery("INSERT INTO personals (username, pwd, phone) VALUES (?, ?, ?)", [username, pwd, phone]);
   }
 
   personalUpdate(personalID: Number, pwd: String) {
     return dbQuery("UPDATE personals SET pwd=? WHERE (personal_id=?)", [pwd, personalID]);
   }
 
-  personalDelete(personalID: Number) {
-    return dbQuery("DELETE FROM personals WHERE (personal_id = ?)", [personalID]);
+  //* DASHBOARD
+
+  customerInfo() {
+    return dbQuery(
+      "SELECT (SELECT COUNT(*) FROM customers) AS 'totalCustomer', (SELECT COUNT(*) FROM customers WHERE status=1) AS 'activeCustomer' FROM customers LIMIT 1"
+    );
   }
 
   //* APARTS
@@ -157,7 +153,9 @@ export class MySQL implements IDB {
   //* INVOICES
 
   invoiceList() {
-    return dbQuery("SELECT * FROM invoices");
+    return dbQuery(
+      "SELECT invoice_id AS 'invoiceID', invoice_date AS 'invoiceDate', cost, status, customer_id AS 'customerID' FROM invoices WHERE status=0"
+    );
   }
 
   invoiceListOfCustomer(customerID: Number) {

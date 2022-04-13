@@ -1,11 +1,12 @@
 export interface IDB {
   //* PERSONALS
 
-  personalList(): any;
   personalShow(username: String): any;
-  personalCreate(username: String, pwd: String, cellPhone: String): any;
   personalUpdate(personalID: Number, pwd: String): any;
-  personalDelete(personalID: Number): any;
+
+  //* DASHBOARD
+
+  customerInfo(): any;
 
   //* APARTS
 

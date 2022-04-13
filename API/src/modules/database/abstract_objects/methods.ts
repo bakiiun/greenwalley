@@ -3,27 +3,11 @@ import { selectDB } from "../db_selector";
 
 //* PERSONALS
 
-const personalList = () => {
-  const method = (db: IDB) => {
-    return db.personalList();
-  };
-
-  return method(selectDB());
-};
-
 const personalShow = (payload: { username: String }) => {
   const method = (db: IDB, payload: { username: String }) => {
     return db.personalShow(payload.username);
   };
   return method(selectDB(), { username: payload.username });
-};
-
-const personalCreate = (payload: { username: String; pwd: String; cellPhone: String }) => {
-  const method = (db: IDB, payload: { username: String; pwd: String; cellPhone: String }) => {
-    return db.personalCreate(payload.username, payload.pwd, payload.cellPhone);
-  };
-
-  return method(selectDB(), { username: payload.username, pwd: payload.pwd, cellPhone: payload.cellPhone });
 };
 
 const personalUpdate = (payload: { personalID: Number; pwd: String }) => {
@@ -34,12 +18,14 @@ const personalUpdate = (payload: { personalID: Number; pwd: String }) => {
   return method(selectDB(), { personalID: payload.personalID, pwd: payload.pwd });
 };
 
-const personalDelete = (payload: { personalID: Number }) => {
-  const method = (db: IDB, payload: { personalID: Number }) => {
-    return db.personalDelete(payload.personalID);
+//* DASHBOARD
+
+const customerInfo = () => {
+  const method = (db: IDB) => {
+    return db.customerInfo();
   };
 
-  return method(selectDB(), { personalID: payload.personalID });
+  return method(selectDB());
 };
 
 //* APARTS
@@ -216,11 +202,9 @@ const invoicePay = (payload: { invoiceID: Number }) => {
 };
 
 export default {
-  personalList,
   personalShow,
-  personalCreate,
   personalUpdate,
-  personalDelete,
+  customerInfo,
   apartList,
   apartShow,
   apartCreate,

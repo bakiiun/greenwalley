@@ -4,6 +4,7 @@
       <v-text-field
         background-color="grey lighten-1"
         prepend-icon="mdi-home-search"
+        @click:prepend="(dialog = true), (dialogType = 'filter')"
         label="Ara..."
         v-model="search"
         dense
@@ -22,7 +23,7 @@
     </v-row>
 
     <v-dialog v-model="dialog" persistent max-width="300">
-      <v-card>
+      <v-card v-show="dialogType == 'create'">
         <v-card-title class="text-h5">OLUŞTUR</v-card-title>
         <div class="mx-2">
           <v-text-field
@@ -64,6 +65,40 @@
           <v-btn color="primary" text @click="createApartEvent()">ONAYLA</v-btn>
         </v-card-actions>
       </v-card>
+
+      <!--  -->
+
+      <v-card v-show="dialogType == 'filter'">
+        <v-card-title class="text-h5">FİLTRELE</v-card-title>
+        <div class="mx-2 ml-5">
+          <v-card outlined>
+            <div class="ma-1">
+              <span>GÖSTER</span>
+              <v-row class="mb-n10">
+                <v-col>
+                  <v-checkbox v-model="apartFilter.empty" label="Boş" hide-details />
+                </v-col>
+                <v-col>
+                  <v-checkbox v-model="apartFilter.full" label="Dolu" hide-details />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-checkbox v-model="apartFilter.aparts" label="Apart" hide-details />
+                </v-col>
+                <v-col>
+                  <v-checkbox v-model="apartFilter.offices" label="Ofis" hide-details />
+                </v-col>
+              </v-row>
+            </div>
+          </v-card>
+        </div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="dialog = false">İPTAL</v-btn>
+          <v-btn color="primary" @click="(dialog = false), filterEvent()" text>ONAYLA</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -82,6 +117,13 @@ export default {
       showList: [],
       apartList: [],
       dialog: false,
+      dialogType: "create",
+      apartFilter: {
+        empty: false,
+        full: false,
+        aparts: false,
+        offices: false,
+      },
       search: "",
       createApart: {
         apartName: "",
@@ -100,6 +142,8 @@ export default {
         }
       });
     },
+
+    filterEvent() {},
   },
 
   watch: {
@@ -107,7 +151,11 @@ export default {
       let val = v.toLowerCase();
       if (val.length > 2) {
         this.showList = this.apartList.filter(
-          (i) => i.apartName.includes(val) || i.customerName?.toLowerCase().includes(val) || i.customerPhone?.includes(val) ||i.identityNumber?.includes(val)
+          (i) =>
+            i.apartName.includes(val) ||
+            i.customerName?.toLowerCase().includes(val) ||
+            i.customerPhone?.includes(val) ||
+            i.identityNumber?.includes(val)
         );
       } else {
         this.showList = this.apartList;

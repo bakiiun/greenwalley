@@ -12,6 +12,7 @@ export async function api(method, url, data) {
     });
     return i;
   } catch (e) {
+    console.log(e.response.data.message);
     switch (e.response.status) {
       case 401:
         router.push("/login");

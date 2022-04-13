@@ -22,7 +22,7 @@ moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
 declare global {
   namespace Express {
     interface Request {
-      userState?: { id: String; username: String; type: String };
+      userSession?: { id: String; username: String; type: String };
     }
   }
 }
@@ -32,7 +32,7 @@ declare global {
 try {
   mysql.connect((error) => {
     if (error) {
-      return console.log(error);
+      throw error;
     }
     return;
   });

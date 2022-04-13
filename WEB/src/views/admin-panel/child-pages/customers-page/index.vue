@@ -12,7 +12,7 @@
         rounded
         solo
       />
-      <v-btn class="ml-2 primary">ARA</v-btn>
+      <!-- <v-btn class="ml-2 primary">ARA</v-btn> -->
     </div>
     <v-container fluid>
       <v-row class="mt-2">

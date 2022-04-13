@@ -11,4 +11,12 @@ export default {
       });
     },
   },
+
+  mounted() {
+    api("get", "/gate").then((i) => {
+      if (i.status == 200) {
+        this.$router.push("/dashboard");
+      }
+    });
+  },
 };

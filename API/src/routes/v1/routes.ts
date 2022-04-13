@@ -1,6 +1,7 @@
 import express from "express";
 import { tokenCheck, isAdmin } from "../../middleware/token_check";
 import personal from "./events/personal_events";
+import dashboard from "./events/dashboard_events";
 import apart from "./events/apart_events";
 import customer from "./events/customer_events";
 import item from "./events/item_events";
@@ -18,6 +19,10 @@ router.post("/", (req, res, next) => {
 router.get("/gate", tokenCheck, gate);
 router.post("/login", verify(rule.login), personal.login);
 router.patch("/personals", tokenCheck, isAdmin, verify(rule.pwd), personal.personalUpdate);
+
+//* DASHBOARD ROUTES
+
+router.get("/customer_info", tokenCheck, dashboard.customerInfo);
 
 //* APART ROUTES
 

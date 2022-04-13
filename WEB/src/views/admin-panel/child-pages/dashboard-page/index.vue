@@ -1,37 +1,42 @@
 <template>
   <v-container fluid>
-    <v-container v-if="false">
-      <chart-card-1 />
-    </v-container>
-
     <v-row justify="space-around">
-      <chart-card-2 class="" :data="fakeCardData1" />
-      <chart-card-2 :data="fakeCardData2" />
+      <info-card v-for="(i, j) in cardList" :key="j" :data="i" />
     </v-row>
+    <div class="mt-8">
+      <chart-card-1 />
+    </div>
   </v-container>
 </template>
 
 <script>
+import mixin from "./mixins";
 import chartCard1 from "./components/Chart-Card-1.vue";
-import chartCard2 from "./components/Chart-Card-2.vue";
+import infoCard from "./components/Info-Card.vue";
 import { mapActions } from "vuex";
 export default {
+  mixins: [mixin],
   components: {
     chartCard1,
-    chartCard2,
+    infoCard,
   },
   data: () => ({
-    fakeCardData1: {
-      title: "MÜŞTERİLER",
-      ico: "mdi-account-supervisor",
-      value: "Aktif Müşteri: 70",
-      oldValue: `Geçen Ay: 56`,
-    },
-    fakeCardData2: {
-      title: "FATURALAR",
-      ico: "mdi-note-text",
-      value: "Ödenmemiş Fatura:108",
-      oldValue: `Günü Geçen: 14`,
+    cardList: {
+      customerCard: {
+        title: "MÜŞTERİLER",
+        ico1: "mdi-account-supervisor",
+        ico2: "mdi-account-group",
+        value1: "Aktif Müşteri: -",
+        value2: "Toplam: -",
+      },
+
+      invoiceCard: {
+        title: "KİRALAR",
+        ico1: "mdi-note-text",
+        ico2: "mdi-backup-restore",
+        value1: "Ödenmemiş Kira: -",
+        value2: `Günü Geçen: -`,
+      },
     },
   }),
   methods: {

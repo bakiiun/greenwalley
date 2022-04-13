@@ -39,9 +39,12 @@
           <v-text-field
             class="mb-2"
             background-color="grey lighten-1"
-            prepend-icon="mdi-lock-question"
+            prepend-icon="mdi-shield-key"
             label="Şifre"
             v-model="personal.pwd"
+            :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show ? 'text' : 'password'"
+            @click:append="show = !show"
             dense
             flat
             hide-details
@@ -74,6 +77,7 @@ import mixins from "./mixins";
 import { mapState } from "vuex";
 import leftMenu from "./components/Left-Menu.vue";
 // import rightMenu from "./components/Right-Menu.vue";
+
 export default {
   mixins: [mixins],
   components: {
@@ -85,6 +89,7 @@ export default {
     leftDrawer: null,
     rightDrawer: null,
     dialog: false,
+    show: false,
     personalInfo: {},
     personal: {
       personalID: "",

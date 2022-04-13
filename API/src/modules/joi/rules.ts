@@ -11,22 +11,34 @@ const pwd = {
 
 const apart = {
   apartName: Joi.string().min(4).max(20).required(),
-  apartType: Joi.boolean().default(1).truthy("1").falsy("0"),
+  apartType: Joi.boolean().truthy("1").falsy("0").default(1),
   apartRoomCount: Joi.number().required(),
 };
 
 const customer = {
   customerName: Joi.string().min(4).max(20).required(),
-  customerPhone: Joi.number().min(11).max(11).required(),
-  identityNumber: Joi.number().min(11).max(11).required(),
+  customerPhone: Joi.string()
+    .length(10)
+    .pattern(/^[0-9]+$/)
+    .required(),
+  identityNumber: Joi.string()
+    .length(11)
+    .pattern(/^[0-9]+$/)
+    .required(),
   contractLength: Joi.number().required(),
   cost: Joi.number().required(),
 };
 
 const customerUpdate = {
   customerName: Joi.string().min(4).max(20).required(),
-  customerPhone: Joi.number().min(11).max(11).required(),
-  identityNumber: Joi.number().min(11).max(11).required(),
+  customerPhone: Joi.string()
+    .length(10)
+    .pattern(/^[0-9]+$/)
+    .required(),
+  identityNumber: Joi.string()
+    .length(11)
+    .pattern(/^[0-9]+$/)
+    .required(),
 };
 
 const item = {
