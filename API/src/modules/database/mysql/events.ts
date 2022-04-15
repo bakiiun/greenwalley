@@ -17,7 +17,7 @@ export class MySQL implements IDB {
 
   customerInfo() {
     return dbQuery(
-      "SELECT (SELECT COUNT(*) FROM customers) AS 'totalCustomer', (SELECT COUNT(*) FROM customers WHERE status=1) AS 'activeCustomer' FROM customers LIMIT 1"
+      "SELECT (SELECT COUNT(*) FROM customers) AS totalCustomer, (SELECT COUNT(*) FROM customers WHERE status=1) AS activeCustomer FROM customers LIMIT 1"
     );
   }
 
@@ -154,7 +154,7 @@ export class MySQL implements IDB {
 
   invoiceList() {
     return dbQuery(
-      "SELECT invoice_id AS 'invoiceID', invoice_date AS 'invoiceDate', cost, status, customer_id AS 'customerID' FROM invoices WHERE status=0"
+      "SELECT invoice_id AS invoiceID, invoice_date AS invoiceDate, invoice_payday AS payday, cost, status, customer_id AS customerID FROM invoices WHERE status=0"
     );
   }
 
@@ -163,7 +163,7 @@ export class MySQL implements IDB {
   }
 
   invoicePay(invoiceID: Number) {
-    return dbQuery("UPDATE invoices SET status=1 WHERE invoice_id=?", [invoiceID]);
+    return dbQuery("UPDATE invoices SET invoice_payday=?, status=1 WHERE invoice_id=?", [moment().format("YYYY-MM-DD"), invoiceID]);
   }
 
   invoiceDelete(id: Number) {
