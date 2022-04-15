@@ -10,7 +10,7 @@ const pwd = {
 };
 
 const apart = {
-  apartName: Joi.string().max(20).required(),
+  apartName: Joi.string().min(4).max(20).required(),
   apartType: Joi.boolean().truthy("1").falsy("0").default(1),
   apartRoomCount: Joi.number().required(),
 };
@@ -42,7 +42,7 @@ const customerUpdate = {
 };
 
 const item = {
-  itemName: Joi.string().max(45).required(),
+  itemName: Joi.string().min(2).max(45).required(),
 };
 
 export default { login, pwd, apart, customer, customerUpdate, item };
