@@ -6,7 +6,7 @@
     <v-list-item style="height: 128px" class="pa-2">
       <div class="d-flex justify-center rotated text-h4 font-weight-bold" v-text="data.apartName" />
       <v-divider class="mx-1 ml-n1" vertical inset />
-      <v-list-item-content class="mb-n6">
+      <v-list-item-content v-if="data.customerID" class="mb-n6">
         <v-list-item-subtitle class="mb-1" v-text="data.customerName" />
         <v-list-item-subtitle v-text="data.customerPhone" />
 
@@ -24,6 +24,9 @@
             <v-progress-linear class="mt-1" :value="percent < 0 ? 0 : percent" color="primary" />
           </div>
         </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-content v-else>
+        <v-icon size="90" color="primary"> mdi-key-chain </v-icon>
       </v-list-item-content>
       <v-list-item-avatar class="ma-n2 pl-3" size="90">
         <v-col>
