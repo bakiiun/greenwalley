@@ -19,10 +19,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
         return res.status(200).json({ token });
       } else {
-        return res.status(400).json({ message: "Kullanıcı ID veya şifre yanlış." });
+        return res.status(406).json({ message: "Kullanıcı ID veya şifre yanlış." });
       }
     } else {
-      return res.status(400).json({ message: "Kullanıcı ID veya şifre yanlış." });
+      return res.status(406).json({ message: "Kullanıcı ID veya şifre yanlış." });
     }
   } catch (error: any) {
     throw next({ event: "Personal Events - login", message: "Giriş yaparken bir hata meydana geldi.", errorMsg: error.message });
