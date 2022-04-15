@@ -6,10 +6,7 @@
       </template>
 
       <template #[`item.invoice_date`]="{ item }">
-        <div>{{ dateFormatter(item.invoice_date) }}</div>
-        <div v-if="item.invoice_payday" style="font-size: 11px">
-          <v-icon class="pb-1" size="13">mdi-checkbox-marked-circle</v-icon> {{ dateFormatter(item.invoice_payday) }}
-        </div>
+        {{ dateFormatter(item.invoice_date) }}
       </template>
 
       <template #[`item.cost`]="{ item }">
