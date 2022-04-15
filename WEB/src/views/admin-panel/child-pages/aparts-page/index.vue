@@ -84,10 +84,10 @@
               </v-row>
               <v-row>
                 <v-col>
-                  <v-checkbox v-model="apartFilter.aparts" label="Apart" hide-details />
+                  <v-checkbox v-model="apartFilter.apart" label="Apart" hide-details />
                 </v-col>
                 <v-col>
-                  <v-checkbox v-model="apartFilter.offices" label="Ofis" hide-details />
+                  <v-checkbox v-model="apartFilter.office" label="Ofis" hide-details />
                 </v-col>
               </v-row>
             </div>
@@ -119,16 +119,16 @@ export default {
       dialog: false,
       dialogType: "create",
       apartFilter: {
-        empty: false,
-        full: false,
-        aparts: false,
-        offices: false,
+        empty: true,
+        full: true,
+        apart: true,
+        office: true,
       },
       search: "",
       createApart: {
         apartName: "",
         apartRoomCount: "",
-        apartType: false,
+        apartType: null,
       },
     };
   },
@@ -143,7 +143,17 @@ export default {
       });
     },
 
-    filterEvent() {},
+    filterEvent() {
+      const { empty, full, office, apart } = this.apartFilter;
+
+      const emptyFilter = (x) => (empty ? !x.customerID : x.customerID);
+      const fullFilter = (x) => (full ? x.customerID : !x.customerID);
+      const apartFilter = (x) => (apart ? x.apartType : !x.apartType);
+      const officeFilter = (x) => (office ? !x.apartType : x.apartType);
+
+      this.showList = this.apartList.filter((i) => emptyFilter(i) || fullFilter(i));
+      this.showList = this.showList.filter((i) => apartFilter(i) || officeFilter(i));
+    },
   },
 
   watch: {
@@ -157,9 +167,29 @@ export default {
             i.customerPhone?.includes(val) ||
             i.identityNumber?.includes(val)
         );
+
+        this.apartFilter = {
+          empty: true,
+          full: true,
+          apart: true,
+          office: true,
+        };
       } else {
         this.showList = this.apartList;
       }
+    },
+    dialog: function (v) {
+      if (!v) {
+        this.createApart = {
+          apartName: "",
+          apartRoomCount: "",
+          apartType: null,
+        };
+      }
+    },
+
+    showList: function (v) {
+      console.log(v);
     },
   },
 
