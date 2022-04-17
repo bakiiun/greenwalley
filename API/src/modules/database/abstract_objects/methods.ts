@@ -28,6 +28,14 @@ const customerInfo = () => {
   return method(selectDB());
 };
 
+const invoiceDailyList = () => {
+  const method = (db: IDB) => {
+    return db.invoiceDailyList();
+  };
+
+  return method(selectDB());
+};
+
 //* APARTS
 
 const apartList = () => {
@@ -205,6 +213,7 @@ export default {
   personalShow,
   personalUpdate,
   customerInfo,
+  invoiceDailyList,
   apartList,
   apartShow,
   apartCreate,

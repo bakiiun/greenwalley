@@ -7,6 +7,7 @@ export interface IDB {
   //* DASHBOARD
 
   customerInfo(): any;
+  invoiceDailyList(): any;
 
   //* APARTS
 

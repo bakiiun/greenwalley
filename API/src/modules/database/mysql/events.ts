@@ -21,6 +21,10 @@ export class MySQL implements IDB {
     );
   }
 
+  invoiceDailyList() {
+    return dbQuery("SELECT invoice_payday AS payday, SUM(cost) AS totalCost FROM invoices WHERE invoice_payday IS NOT NULL GROUP BY payday");
+  }
+
   //* APARTS
 
   apartList() {

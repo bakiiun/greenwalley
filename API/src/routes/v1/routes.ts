@@ -23,6 +23,7 @@ router.patch("/personals", tokenCheck, isAdmin, verify(rule.pwd), personal.perso
 //* DASHBOARD ROUTES
 
 router.get("/customer_info", tokenCheck, dashboard.customerInfo);
+router.get("/invoice_daily_list", tokenCheck, dashboard.invoiceDailyList);
 
 //* APART ROUTES
 
