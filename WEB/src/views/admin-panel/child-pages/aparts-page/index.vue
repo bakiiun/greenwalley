@@ -13,7 +13,7 @@
         rounded
         solo
       />
-      <v-btn class="ml-2 primary" @click="dialog = true">YENİ DAİRE</v-btn>
+      <v-btn class="ml-2 primary" @click="(dialog = true), (dialogType = 'create')">YENİ DAİRE</v-btn>
     </div>
 
     <v-row class="mt-2">
@@ -134,7 +134,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["trigger"]),
+    ...mapActions(["trigger", "notification"]),
     createApartEvent() {
       this.mCreateApart().then((i) => {
         if (i) {
@@ -186,10 +186,6 @@ export default {
           apartType: null,
         };
       }
-    },
-
-    showList: function (v) {
-      console.log(v);
     },
   },
 

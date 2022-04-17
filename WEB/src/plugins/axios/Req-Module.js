@@ -1,4 +1,3 @@
-import router from "../../router";
 import axios from "axios";
 import vueApp from "../../main";
 
@@ -14,40 +13,28 @@ export async function api(method, url, data) {
     });
     return i;
   } catch (e) {
-    console.log(e.response.data.message);
+    const { status, data } = e.response;
+    const dispatch = vueApp.$store.dispatch;
 
-    const notification = (title, text, type) => {
-      return vueApp.$notify({
-        group: "error",
-        title: title || "Hata",
-        type: type || "error",
-        position: "top right",
-        duration: "3000",
-        speed: "300",
-        text: text,
-      });
-    };
-
-    switch (e.response.status) {
+    switch (status) {
       case 400:
-        notification("400 - Hata", e.response.data.message, "warning");
-        break;
-      case 401:
-        notification("401 - Yetkiniz Yok", e.response.data.message);
-        router.push("/login");
+        dispatch("notification", ["400 - Eksik Girdi", data.message]);
         break;
       case 403:
-        notification("403 - Yetkiniz Yok", e.response.data.message);
+        dispatch("notification", ["403 - Yasaklanmış Alan", data.message]);
         break;
       case 404:
-        notification("404 - Bulunamadı", e.response.data.message);
+        dispatch("notification", ["404 - Bulunamadı", data.message]);
+        break;
+      case 406:
+        dispatch("notification", ["406 - Başarısız", "Kullanıcı adı veya şifre yanlış.", "warning"]);
         break;
       case 500:
-        notification("500 - Hata", e.response.data.message);
+        dispatch("notification", ["500 - Hata", data.message]);
         break;
+
       default:
-        notification("Hata", "Sunucu kaynaklı hata.");
-        break;
+        throw e.response;
     }
   }
 }

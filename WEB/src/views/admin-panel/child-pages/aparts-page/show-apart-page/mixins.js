@@ -3,7 +3,7 @@ import { mapActions } from "vuex";
 
 export default {
   methods: {
-    ...mapActions(["trigger"]),
+    ...mapActions(["trigger", "notification"]),
 
     mApartData() {
       api("get", `/aparts/${this.$route.params.id}`).then((res) => {
@@ -27,6 +27,7 @@ export default {
     async mUpdateApart(payload) {
       return api("put", `/aparts/${payload.apartID}`, payload).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Daire güncelleme işlemi başarılı.", "success"]);
           this.mApartData();
           return true;
         }
@@ -36,6 +37,7 @@ export default {
     mDeleteApart(apartID) {
       api("delete", `/aparts/${apartID}`).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Daire silme işlemi başarılı.", "success"]);
           this.$router.push("/aparts");
         }
       });
@@ -46,6 +48,7 @@ export default {
     async mCustomerCreate(payload) {
       return api("post", "/customers", payload).then((res) => {
         if (res.status == 201) {
+          this.notification(["İşlem Başarılı", "Müşteri oluşturma işlemi başarılı.", "success"]);
           this.mApartData();
           return true;
         }
@@ -55,6 +58,7 @@ export default {
     async mCustomerUpdate(payload) {
       return api("put", `/customers/${payload.customerID}`, payload).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Müşteri güncelleme işlemi başarılı.", "success"]);
           this.mApartData();
           return true;
         }
@@ -64,6 +68,7 @@ export default {
     async mCustomerEndContract(customerID) {
       return api("patch", `/customers/:${customerID}`, { customerID }).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Kontrat sonlandırma işlemi başarılı.", "success"]);
           this.mApartData();
           this.mInvoiceList();
           return true;
@@ -82,6 +87,7 @@ export default {
     async mItemCreate(payload) {
       return api("post", `/aparts/${this.$route.params.id}/items`, payload).then((res) => {
         if (res.status == 201) {
+          this.notification(["İşlem Başarılı", "Eşya oluşturma işlemi başarılı.", "success"]);
           this.mItemList();
           return true;
         }
@@ -91,6 +97,7 @@ export default {
     async mItemDelete(itemID) {
       return api("delete", `/aparts/${this.$route.params.id}/items/${itemID}`).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Eşya silme işlemi başarılı.", "success"]);
           this.mItemList();
           return true;
         }
@@ -108,6 +115,7 @@ export default {
     async mInvoicePay(customerID, invoiceID) {
       return api("patch", `/aparts/${customerID}/invoices/${invoiceID}`, { invoiceID }).then((res) => {
         if (res.status == 200) {
+          this.notification(["İşlem Başarılı", "Fatura düzenleme işlemi başarılı.", "success"]);
           this.mInvoiceList(customerID);
           return true;
         }

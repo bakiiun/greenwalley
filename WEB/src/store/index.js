@@ -6,7 +6,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     breadcrumbs: [],
-    aa: "asdasd",
   },
   mutations: {
     setState(state, payload) {
@@ -16,6 +15,18 @@ export default new Vuex.Store({
   actions: {
     trigger({ commit }, payload) {
       commit("setState", { key: payload.state, data: payload.data });
+    },
+    /* eslint-disable no-unused-vars */
+    notification({ commit }, [title, text, type]) {
+      Vue.notify({
+        group: "error",
+        title: title || "Hata",
+        type: type || "error",
+        position: "top right",
+        duration: "3000",
+        speed: "300",
+        text,
+      });
     },
   },
   modules: {},
