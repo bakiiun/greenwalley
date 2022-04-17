@@ -25,7 +25,7 @@
     <v-navigation-drawer v-model="leftDrawer" app width="300">
       <leftMenu />
       <template v-slot:append>
-        <v-list-item link>
+        <v-list-item link @click="logoutEvent()">
           <v-list-item-icon class="pl-2"> <v-icon size="lg">mdi-alert</v-icon> </v-list-item-icon>
           <v-list-item-title class="font-weight-bold"> ÇIKIŞ </v-list-item-title>
         </v-list-item>
@@ -74,7 +74,7 @@
 
 <script>
 import mixins from "./mixins";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import leftMenu from "./components/Left-Menu.vue";
 // import rightMenu from "./components/Right-Menu.vue";
 
@@ -98,12 +98,19 @@ export default {
   }),
 
   methods: {
+    ...mapActions(["notification"]),
+
     updateEvent() {
       this.mPersonalUpdate(this.personal).then((i) => {
         if (i) {
           this.dialog = false;
         }
       });
+    },
+    async logoutEvent() {
+      localStorage.setItem("token", null);
+      await this.$router.push("/login");
+      this.notification(["Çıkış Başarılı", null, "success"]);
     },
   },
 
