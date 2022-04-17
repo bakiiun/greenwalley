@@ -6,6 +6,9 @@
 
 <script>
 import apexchart from "vue-apexcharts";
+import moment from "moment";
+import { api } from "../../../../../plugins/axios/Req-Module";
+
 export default {
   components: {
     apexchart,
@@ -15,63 +18,64 @@ export default {
       chartOptions: {},
       series: [
         {
-          name: "series-1",
-          data: [30, 40, 35, 50, 49, 60, 70, 91],
+          name: "payList",
+          data: [],
         },
       ],
     };
   },
 
   mounted() {
-    this.chartOptions = {
-      grid: {
-        show: false,
-        xaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        yaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        row: {
-          colors: undefined,
-          opacity: 0.5,
-        },
-        column: {
-          colors: undefined,
-          opacity: 0.5,
-        },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        },
-      },
-      tooltip: {
-        custom: function ({ series, seriesIndex, dataPointIndex }) {
-          return "<span>" + series[seriesIndex][dataPointIndex] + "</span>";
-        },
-        fillSeriesColor: false,
-        theme: false,
-      },
+    api("get", "/invoice_daily_list").then((i) => {
+      let dateList = Object.keys(i.data).map((key) => moment(i.data[key].payday).format("DD-MM"));
+      let costList = Object.keys(i.data).map((key) => i.data[key].totalCost);
 
-      chart: {
-        zoom: {
-          enabled: false,
-        },
-        width: "99%",
-        toolbar: {
+      this.series[0].data = costList;
+
+      this.chartOptions = {
+        grid: {
           show: false,
+          padding: {
+            top: 0,
+            right: 10,
+            bottom: 0,
+            left: 10,
+          },
         },
-      },
-      xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
-      },
-    };
+        tooltip: {
+          custom: function ({ series, seriesIndex, dataPointIndex }) {
+            return '<div class="arrow_box">' + "<span>" + series[seriesIndex][dataPointIndex] + "</span>" + "</div>";
+          },
+          fillSeriesColor: false,
+          theme: false,
+          marker: {
+            show: false,
+          },
+        },
+
+        chart: {
+          zoom: {
+            enabled: false,
+          },
+          width: "99%",
+          toolbar: {
+            show: false,
+          },
+        },
+        xaxis: {
+          categories: dateList,
+          max: 30,
+          labels: {
+            style: {
+              fontSize: "10px",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+      };
+    });
   },
 };
 </script>
