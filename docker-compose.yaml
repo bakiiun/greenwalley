@@ -1,0 +1,36 @@
+version: '3.8'
+
+services: 
+  db:
+    container_name: Database
+    image: mysql:5.7.37
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: green_walley
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./API/MySQL_DB/:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+  api:
+    container_name: API
+    build: 
+     context: ./API
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+  web:
+    container_name: WEB
+    build: 
+     context: ./WEB
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - api
+  
+volumes:
+  mysql:
