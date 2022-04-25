@@ -17,16 +17,6 @@ app.use(logger("dev"));
 moment.locale("tr");
 moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
 
-//*GLOBAL VERIABLES
-
-declare global {
-  namespace Express {
-    interface Request {
-      userSession?: { id: String; username: String; type: String };
-    }
-  }
-}
-
 //* DATABASE CONNECT
 
 try {
